@@ -3,25 +3,49 @@ import PortfolioSections from '../components/PortfolioSections';
 import SiteHeader from '../components/SiteHeader';
 import WelcomeScreen from '../components/WelcomeScreen';
 
+const welcomeStorageKey = 'dinesh-portfolio-welcome-closed';
+
+function shouldShowWelcome() {
+  if (window.location.hash.length > 0) {
+    return false;
+  }
+
+  try {
+    return localStorage.getItem(welcomeStorageKey) !== 'true';
+  } catch {
+    return true;
+  }
+}
+
 export default function HomePage({ records }) {
-  const [showWelcome, setShowWelcome] = useState(
-    () => window.location.hash.length === 0
-  );
+  const [showWelcome, setShowWelcome] = useState(() => shouldShowWelcome());
 
   useEffect(() => {
     function skipWelcome(event) {
-      if (event.key === 'Escape') setShowWelcome(false);
+      if (event.key === 'Escape') {
+        setShowWelcome(false);
+        try {
+          localStorage.setItem(welcomeStorageKey, 'true');
+        } catch {
+          // Storage may be unavailable; keep the welcome fallback unchanged.
+        }
+      }
     }
     window.addEventListener('keydown', skipWelcome);
     return () => window.removeEventListener('keydown', skipWelcome);
   }, []);
 
-  function enterPortfolio() {
+  function dismissWelcome() {
     setShowWelcome(false);
+    try {
+      localStorage.setItem(welcomeStorageKey, 'true');
+    } catch {
+      // Storage may be unavailable; keep the welcome fallback unchanged.
+    }
   }
 
   if (showWelcome) {
-    return <WelcomeScreen onEnter={enterPortfolio} />;
+    return <WelcomeScreen onEnter={dismissWelcome} />;
   }
 
   return (

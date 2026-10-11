@@ -32,10 +32,10 @@ export default function WelcomeScreen({ onEnter }) {
           Explore my education, projects, and experience. This portfolio shares
           my current work and achievements.
         </p>
-        <button className="button button-primary welcome-enter" onClick={onEnter}>
+        <button type="button" className="button button-primary welcome-enter" onClick={onEnter}>
           Enter Portfolio <span aria-hidden="true">→</span>
         </button>
-        <button className="skip-welcome" onClick={onEnter}>
+        <button type="button" className="skip-welcome" onClick={onEnter}>
           Skip welcome
         </button>
       </div>
